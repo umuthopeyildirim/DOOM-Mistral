@@ -2,7 +2,9 @@
 
 ## Training data format
 
-### Grid
+path to training data : 'ViZDoom/training_data'
+
+### Grid legend
 E - Enemy
 P - Player
 B - Bullet
