@@ -1,0 +1,128 @@
+[
+    {
+        "grid_height": 32,
+        "grid_width": 32,
+        "screen_width": 240,
+        "screen_height": 320,
+        "grid": "                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n              EE                \n              EE                \n              EE                \n              EE                \n                                \n                                \n                                \n                                \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n                                \n",
+        "available_actions": [
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "ATTACK"
+        ],
+        "action": [
+            false,
+            false,
+            true
+        ],
+        "killcount": 0.0,
+        "health": 100.0,
+        "armor": 0.0,
+        "ammo2": 50.0
+    },
+    {
+        "grid_height": 32,
+        "grid_width": 32,
+        "screen_width": 240,
+        "screen_height": 320,
+        "grid": "                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n              EE                \n              EE                \n              EE                \n              EE                \n                                \n                                \n                                \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n                                \n",
+        "available_actions": [
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "ATTACK"
+        ],
+        "action": [
+            false,
+            true,
+            false
+        ],
+        "killcount": 0.0,
+        "health": 100.0,
+        "armor": 0.0,
+        "ammo2": 50.0
+    },
+    {
+        "grid_height": 32,
+        "grid_width": 32,
+        "screen_width": 240,
+        "screen_height": 320,
+        "grid": "                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n              EE                \n              EE                \n              EE                \n              EE                \n                                \n                                \n                                \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n                                \n",
+        "available_actions": [
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "ATTACK"
+        ],
+        "action": [
+            false,
+            true,
+            false
+        ],
+        "killcount": 0.0,
+        "health": 100.0,
+        "armor": 0.0,
+        "ammo2": 50.0
+    },
+    {
+        "grid_height": 32,
+        "grid_width": 32,
+        "screen_width": 240,
+        "screen_height": 320,
+        "grid": "                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n              EE                \n              EE                \n              EE                \n              EE                \n                                \n                                \n                                \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n                                \n",
+        "available_actions": [
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "ATTACK"
+        ],
+        "action": [
+            false,
+            false,
+            true
+        ],
+        "killcount": 0.0,
+        "health": 100.0,
+        "armor": 0.0,
+        "ammo2": 50.0
+    },
+    {
+        "grid_height": 32,
+        "grid_width": 32,
+        "screen_width": 240,
+        "screen_height": 320,
+        "grid": "                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n              EE                \n              EE                \n              EE                \n              EE                \n                                \n                                \n                                \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n             PPPP               \n                                \n",
+        "available_actions": [
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "ATTACK"
+        ],
+        "action": [
+            false,
+            true,
+            false
+        ],
+        "killcount": 0.0,
+        "health": 100.0,
+        "armor": 0.0,
+        "ammo2": 50.0
+    },
+    {
+        "grid_height": 32,
+        "grid_width": 32,
+        "screen_width": 240,
+        "screen_height": 320,
+        "grid": "                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n                                \n              DD                \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n             PPPPP              \n                                \n",
+        "available_actions": [
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "ATTACK"
+        ],
+        "action": [
+            false,
+            false,
+            true
+        ],
+        "killcount": 1.0,
+        "health": 100.0,
+        "armor": 0.0,
+        "ammo2": 49.0
+    }
+]

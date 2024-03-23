@@ -1,0 +1,52 @@
+[build-system]
+requires = ["cmake>=3.12.0", "setuptools>=65", "wheel"]
+
+[tool.black]
+safe = true
+
+[tool.isort]
+atomic = true
+profile = "black"
+src_paths = ["examples/python", "gym_wrapper", "gymnasium_wrapper", "tests"]
+indent = 4
+lines_after_imports = 2
+multi_line_output = 3
+known_first_party = ['vizdoom']
+
+[tool.pyright]
+include = ["examples/python/**", "gym_wrapper", "gymnasium_wrapper", "tests/**"]
+exclude = ["**/__pycache__"]
+strict = []
+
+typeCheckingMode = "basic"
+pythonVersion = "3.8"
+pythonPlatform = "All"
+typeshedPath = "typeshed"
+enableTypeIgnoreComments = true
+
+# This is required as the CI pre-commit does not download the module
+#   Therefore, we have to ignore missing imports
+reportMissingImports = "none"
+reportGeneralTypeIssues = "none"
+reportPrivateUsage = "warning"
+reportPrivateImportUsage = "warning"
+reportAttributeAccessIssue = "warning"
+
+[tool.cibuildwheel]
+# We need to build for the following Python versions:
+build = "cp{38,39,310,311,312}-*"
+
+[tool.cibuildwheel.linux]
+# Only manylinux is supported (no musl)
+build = "cp{38,39,310,311,312}-manylinux*"
+
+# For manylinux_2_28 we need to install the following dependencies using yum:
+before-all = "yum install -y cmake git boost-devel SDL2-devel openal-soft-devel"
+
+# Only build for x86_64 and aarch64 are officially supported
+archs = "x86_64 aarch64"
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+
+[tool.cibuildwheel.macos]
+before-all = "brew install cmake boost sdl2 openal-soft"
