@@ -13,22 +13,23 @@ game.load_config(os.path.join('/Users/bhav/experiments/mistral-hackathon/repos/G
 game.set_window_visible(True)
 game.set_mode(Mode.ASYNC_PLAYER)
 game.set_labels_buffer_enabled(True)
+game.set_render_hud(False)
 game.init()
 
 #resolution_manager = ScreenResolutionManager()
 #resolution_manager.set_game(game)
 #resolution_manager.set_mode(Mode.ASYNC_PLAYER)
 
-def generate_ascii_grid(bounding_boxes, wall_buffer, floor_buffer, screen_width, screen_height):
+def generate_ascii_grid(bounding_boxes, wall_buffer, floor_buffer, screen_width, screen_height, grid_width=64, grid_height=32):
     # Normalize screen dimensions to 32x32 grid
-    scale_x = 32 / screen_width
-    scale_y = 32 / screen_height
+    scale_x = 1.0*grid_width / screen_width
+    scale_y = 1.0*grid_height / screen_height
 
     # Create a 32x32 grid filled with spaces
-    grid = [[' ' for _ in range(32)] for _ in range(32)]
+    grid = [[' ' for _ in range(grid_width)] for _ in range(grid_height)]
 
-    for i in range(32):
-        for j in range(32):
+    for i in range(grid_height):
+        for j in range(grid_width):
             x1 = int(j / scale_x)
             y1 = int(i / scale_y)
             x2 = int((j + 1) / scale_x)
@@ -57,10 +58,10 @@ def generate_ascii_grid(bounding_boxes, wall_buffer, floor_buffer, screen_width,
         h_norm = int(h * scale_y)
 
         # Ensure coordinates and dimensions are within the grid
-        x_norm = max(0, min(31, x_norm))
-        y_norm = max(0, min(31, y_norm))
-        w_norm = max(0, min(32 - x_norm, w_norm))
-        h_norm = max(0, min(32 - y_norm, h_norm))
+        x_norm = max(0, min(grid_width-1, x_norm))
+        y_norm = max(0, min(grid_height-1, y_norm))
+        w_norm = max(0, min(grid_width - x_norm, w_norm))
+        h_norm = max(0, min(grid_height - y_norm, h_norm))
 
         # Draw the bounding box on the grid
         for i in range(h_norm):
@@ -179,8 +180,6 @@ for episode in range(episodes):
             action_index = pressed_key#int(key_mappings[pressed_key])
             if action_index == 7:
                 # End game
-                print(all_labels)
-                exit()
                 break
             action = action_mappings.get(action_index, [False, False, False])
 
