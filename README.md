@@ -10,3 +10,7 @@ P - Player
 B - Bullet
 W - Wall
 F - Floor
+A - ArmorBonus
+Z - Zombieman
+H - HealthBonus
+S - Stimpack
