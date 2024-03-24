@@ -1,4 +1,4 @@
-from vizdoom import DoomGame, Mode
+from vizdoom import DoomGame, Mode, Button
 # from vizdoom.opencv import ScreenResolutionManager
 # import cv2
 import os
@@ -80,12 +80,12 @@ def generate_ascii_grid(bounding_boxes, wall_buffer, floor_buffer, screen_width,
 
 
 def get_object_name_char(object_name):
-    if object_name == 'Cacodemon':
-        return 'E'
+    # If the object is the DoomPlayer, return 'P'
     if object_name == 'DoomPlayer':
         return 'P'
+    # Otherwise, assume it's an enemy and return 'E'
     else:
-        return object_name[0]
+        return 'E'
 
 
 def convert_labels_to_representation(labels, wall_buffer, floor_buffer, screen_height=320, screen_width=240):
@@ -201,6 +201,9 @@ screen_width = 240
 wall_id = 0
 floor_id = 1
 
+use_button_index = game.get_available_buttons().index(Button.USE)
+door_actions = [0] * game.get_available_buttons_size()
+
 for episode in range(episodes):
     game.new_episode()
     episode_data = []
@@ -230,6 +233,7 @@ for episode in range(episodes):
             floor_buffer = np.zeros_like(state.labels_buffer)
             wall_buffer[state.labels_buffer == wall_id] = 1
             floor_buffer[state.labels_buffer == floor_id] = 1
+            door_actions[use_button_index] = 1
 
             print(state.labels)
             for label in state.labels:
@@ -252,6 +256,7 @@ for episode in range(episodes):
             llm_output = llm_call(grid)
             next_action = handle_llm_output(llm_output)
             reward = game.make_action(next_action)
+            # game.make_action(door_actions)
             example['reward'] = reward
             episode_data.append(example)
             # TODO: Make api call to LLM.
