@@ -8,15 +8,17 @@
 import os
 from random import choice
 import json
+import numpy as np
 
 import vizdoom as vzd
+from vizdoom import AutomapMode, DoomGame, Mode, ScreenFormat, ScreenResolution
 
 
 game = vzd.DoomGame()
 
 # Use other config file if you wish.
 #game.load_config(os.path.join(vzd.scenarios_path, "basic.cfg"))
-game.load_config(os.path.join('/Users/bhav/experiments/mistral-hackathon/repos/ViZDoom/scenarios', "basic.cfg"))
+game.load_config(os.path.join('/Users/bhav/experiments/mistral-hackathon/repos/GameCopilot/ViZDoom/scenarios', "basic.cfg"))
 game.set_episode_timeout(100)
 
 # Record episodes while playing in 320x240 resolution without HUD
@@ -27,6 +29,8 @@ game.set_render_hud(False)
 game.set_mode(vzd.Mode.PLAYER)
 
 game.set_labels_buffer_enabled(True)
+game.set_automap_buffer_enabled(True)
+game.set_automap_mode(AutomapMode.OBJECTS_WITH_SIZE)
 game.init()
 
 actions = [[True, False, False], [False, True, False], [False, False, True]]
@@ -35,13 +39,34 @@ actions = [[True, False, False], [False, True, False], [False, False, True]]
 # Run and record this many episodes
 episodes = 2
 
-def generate_ascii_grid(bounding_boxes, screen_width, screen_height):
+def generate_ascii_grid(bounding_boxes, wall_buffer, floor_buffer, screen_width, screen_height):
     # Normalize screen dimensions to 32x32 grid
     scale_x = 32 / screen_width
     scale_y = 32 / screen_height
 
     # Create a 32x32 grid filled with spaces
     grid = [[' ' for _ in range(32)] for _ in range(32)]
+
+    for i in range(32):
+        for j in range(32):
+            x1 = int(j / scale_x)
+            y1 = int(i / scale_y)
+            x2 = int((j + 1) / scale_x)
+            y2 = int((i + 1) / scale_y)
+
+            area = (y2 - y1) * (x2 - x1)
+
+            if area > 0:
+                wall_score = sum(wall_buffer[y1:y2, x1:x2].flatten()) / area
+                floor_score = sum(floor_buffer[y1:y2, x1:x2].flatten()) / area
+            else:
+                wall_score = 0
+                floor_score = 0
+
+            if wall_score > 0.5:
+                grid[i][j] = 'W'
+            elif floor_score > 0.5:
+                grid[i][j] = 'F'
 
     # Iterate over the bounding boxes
     for x, y, w, h, label in bounding_boxes:
@@ -78,7 +103,7 @@ def get_object_name_char(object_name):
     else:
         return object_name[0]
 
-def convert_labels_to_representation(labels, screen_height=320, screen_width=240):
+def convert_labels_to_representation(labels, wall_buffer, floor_buffer, screen_height=320, screen_width=240):
     reps = []
     #screen_height = 320
     #screen_width = 240
@@ -88,7 +113,7 @@ def convert_labels_to_representation(labels, screen_height=320, screen_width=240
         #rep = (label.y, label.x, label.height, label.width, label.object_name[0])
         print(label.object_name)
         reps.append(rep)
-    grid = generate_ascii_grid(reps, screen_height, screen_width)
+    grid = generate_ascii_grid(reps, wall_buffer, floor_buffer, screen_height, screen_width)
     return grid
  
 # Recording
@@ -99,6 +124,8 @@ screen_height = 320
 screen_width = 240
 
 available_actions = ['MOVE_LEFT', 'MOVE_RIGHT', 'ATTACK']
+wall_id = 0
+floor_id = 1
 for i in range(episodes):
 
     # new_episode can record the episode using Doom's demo recording functionality to given file.
@@ -112,10 +139,16 @@ for i in range(episodes):
         a = choice(actions)
         r = game.make_action(choice(actions))
 
+        print(s.labels_buffer.shape)
+        print(s.labels_buffer)
+        wall_buffer = np.zeros_like(s.labels_buffer)
+        floor_buffer = np.zeros_like(s.labels_buffer)
+        wall_buffer[s.labels_buffer == wall_id] = 1
+        floor_buffer[s.labels_buffer == floor_id] = 1
+
         print(s.labels)
-        grid = convert_labels_to_representation(s.labels, screen_height=320, screen_width=240)
-        print(s.game_variables)
-        #print(grid)
+        grid = convert_labels_to_representation(s.labels, wall_buffer, floor_buffer, screen_height=320, screen_width=240)
+        print(grid)
         example = {}
         example['grid_height'] = 32
         example['grid_width'] = 32
@@ -170,7 +203,7 @@ for i in range(episodes):
     while not game.is_episode_finished():
         # Get a state
         s = game.get_state()
-        grid = convert_labels_to_representation(s.labels, screen_height=800, screen_width=600)
+        grid = convert_labels_to_representation(s.labels, wall_buffer, floor_buffer, screen_height=800, screen_width=600)
         print(grid)
         example = {}
         example['grid'] = grid
