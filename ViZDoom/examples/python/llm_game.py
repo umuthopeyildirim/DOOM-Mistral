@@ -7,6 +7,8 @@ import time
 import numpy as np
 import json
 import openai
+from dotenv import load_dotenv
+load_dotenv()
 
 game = DoomGame()
 # game.load_config("basic.cfg")
@@ -169,7 +171,7 @@ pressed_keys = set()
 def llm_call(grid):
     client = openai.OpenAI(
         base_url="https://api.fireworks.ai/inference/v1",
-        api_key="62KUj5M5I2rNBSUE0MFi53VT8WOBsFLnx3QCr2zYeY23iCdf",
+        api_key=os.getenv("FIREWORKS_API_KEY"),
     )
     response = client.completions.create(
         model="accounts/umut475-2d9d48/models/doom-mistral",

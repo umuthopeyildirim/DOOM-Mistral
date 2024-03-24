@@ -4,21 +4,21 @@ from langchain_groq import ChatGroq
 from pymongo import MongoClient
 from langchain_community.vectorstores import MongoDBAtlasVectorSearch
 from langchain_mistralai import MistralAIEmbeddings
+from dotenv import load_dotenv
+import os
+load_dotenv()
+client = ChatGroq(api_key=os.getenv("FIREWORKS_API_KEY")),
 
-client = ChatGroq(
-    api_key="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")
 
-
-mongo_client = MongoClient(
-    "mongodb+srv://umut475:wiiAcSrI6OFdeLog@gamecopilotrag.20hgbqx.mongodb.net/?retryWrites=true&w=majority&appName=GameCopilotRAG")
+mongo_client = MongoClient(os.getenv("MONGO_URI"))
 db = "gamecopilot"
 vector_search_collection = "all"
 
 vector_search = MongoDBAtlasVectorSearch.from_connection_string(
-    "mongodb+srv://umut475:wiiAcSrI6OFdeLog@gamecopilotrag.20hgbqx.mongodb.net/?retryWrites=true&w=majority&appName=GameCopilotRAG",
+    os.getenv("MONGO_URI"),
     db + "." + vector_search_collection,
     MistralAIEmbeddings(
-        mistral_api_key="TWfVrlX659GSTS9hcsgUcPZ8uNzfoQsg", model="mistral-embed"),
+        mistral_api_key=os.getenv("MISTRAL_API_KEY"), model="mistral-embed"),
 )
 
 
