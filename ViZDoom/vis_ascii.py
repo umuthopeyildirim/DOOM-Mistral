@@ -5,6 +5,7 @@ import time
 
 
 path = 'training_data/bhav_episode_0.json'
+path = 'training_data/episode_1.json'
 
 data = json.load(open(path, 'r'))
 for frame in data:

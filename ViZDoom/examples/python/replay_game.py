@@ -6,9 +6,6 @@ from pynput import keyboard
 import time
 import numpy as np
 import json
-from fireworks.client import Fireworks
-client = Fireworks(api_key="iYjsIUwq3QbNazZTphrxKH0Up3jAlzm8QTfeQ59y6kBba7Nr")
-
 
 game = DoomGame()
 #game.load_config("basic.cfg")
@@ -95,7 +92,7 @@ def convert_labels_to_representation(labels, wall_buffer, floor_buffer, screen_h
         #rep = (32*label.x/screen_width, 32*label.y/screen_height, 32*label.width/screen_width, 32*label.height/screen_height, label.object_name[0])
         rep = (label.x, label.y, label.width, label.height, get_object_name_char(label.object_name))
         #rep = (label.y, label.x, label.height, label.width, label.object_name[0])
-        #print(label.object_name)
+        print(label.object_name)
         reps.append(rep)
     grid = generate_ascii_grid(reps, wall_buffer, floor_buffer, screen_height, screen_width)
     return grid
@@ -160,28 +157,7 @@ pressed_keys = set()
 #listener.start()
 
 def llm_call(last_state):
-    grid = last_state['grid']
-    prompt = '''Youre the DOOM AI, assuming the role of Demon Slayer in a grid environment represented by ASCII characters. Understand each character as follows: E: Enemy, P: Player, B: Bullet, W: Wall, F: Floor, A: Armor Bonus, Z: Zombieman, H: Health Bonus, S: Stimpack. Your task is to interpret the grid and choose an appropriate action from the following options: MOVE_FORWARD, TURN_LEFT, TURN_RIGHT, MOVE_BACKWARD, MOVE_LEFT, MOVE_RIGHT, ATTACK.  Your responses must exclusively be your chosen action.'''
-    prompt += grid
-    prompt += '\nResponse:'
-    response = client.chat.completions.create(
-    #model="accounts/socter-af4bea/models/doom-mistral-fixed-prompt-lr-assistant",
-    model="accounts/socter-af4bea/models/doom-mistral-fixed-prompt-lr-assistant-fast-3",
-    messages=[{
-        "role": "user",
-        "content": prompt,
-        }],
-    )
-    print(grid)
-    print('Sending response')
-    action = response.choices[0].message.content
-    print('LLM Action: ', action)
-    action_idx = available_actions.index(action)
-    #print('LLM Action idx: ', action_idx)
-    print(action_idx)
-    if action_idx == -1:
-        return None
-    return one_hot(action_idx)
+    return None
 
 episodes = 10
 screen_height = 320
@@ -189,13 +165,27 @@ screen_width = 240
 wall_id = 0
 floor_id = 1
 
+all_recorded_actions = []
+episode_file = '/Users/bhav/experiments/mistral-hackathon/repos/GameCopilot/ViZDoom/training_data/bhav_episode_0.json'
+recorded_episode = json.load(open(episode_file, 'r'))
+for step in recorded_episode:
+    all_recorded_actions.append(step['action'])
+
+def get_next_action():
+    if len(all_recorded_actions) == 0:
+        return None
+    action = all_recorded_actions.pop(0)
+    return action
+
 for episode in range(episodes):
     game.new_episode()
     episode_data = []
     all_labels = {}
-    next_action = None
+    next_action = get_next_action()#None
     while not game.is_episode_finished():
         state = game.get_state()
+        #if state.tic < 20:
+        #    continue
 
         # Get user input for action
         #action_input = input("Enter action (0-3): ")
@@ -209,7 +199,8 @@ for episode in range(episodes):
             #    # End game
             #    break
             if next_action is None:
-                action = action_mappings[0]
+                #action = action_mappings[0]
+                continue
             else:
                 action = next_action
             #action = action_mappings.get(action_index, [False, False, False])
@@ -219,11 +210,11 @@ for episode in range(episodes):
             wall_buffer[state.labels_buffer == wall_id] = 1
             floor_buffer[state.labels_buffer == floor_id] = 1
 
-            #print(state.labels)
+            print(state.labels)
             for label in state.labels:
                 all_labels[label.object_name] = 0
             grid = convert_labels_to_representation(state.labels, wall_buffer, floor_buffer, screen_height=320, screen_width=240)
-            #print(grid)
+            print(grid)
             example = {}
             example['grid_height'] = 32
             example['grid_width'] = 32
@@ -240,7 +231,8 @@ for episode in range(episodes):
             example['reward'] = reward
             episode_data.append(example)
             # TODO: Make api call to LLM.
-            next_action = llm_call(episode_data[-1])
+            next_action = get_next_action()
+            print(next_action)
 
         except ValueError:
             print("Invalid input. Using random action.")
