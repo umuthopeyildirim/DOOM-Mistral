@@ -181,6 +181,20 @@ def llm_call(grid):
     return response.choices[0].text
 
 
+def handle_llm_output(llm_output):
+    action_string_to_index = {
+        'MOVE_FORWARD': 0,
+        'TURN_LEFT': 1,
+        'TURN_RIGHT': 2,
+        'MOVE_BACKWARD': 3,
+        'MOVE_LEFT': 4,
+        'MOVE_RIGHT': 5,
+        'ATTACK': 6,
+    }
+    # Default to MOVE_FORWARD if unrecognized
+    return action_mappings.get(action_string_to_index.get(llm_output.strip(), 0), one_hot(0))
+
+
 episodes = 10
 screen_height = 320
 screen_width = 240
@@ -235,11 +249,13 @@ for episode in range(episodes):
             example['health'] = state.game_variables[1]
             example['armor'] = state.game_variables[2]
             example['ammo2'] = state.game_variables[3]
-            reward = game.make_action(action)
+            llm_output = llm_call(grid)
+            next_action = handle_llm_output(llm_output)
+            reward = game.make_action(next_action)
             example['reward'] = reward
             episode_data.append(example)
             # TODO: Make api call to LLM.
-            next_action = llm_call(grid)
+            # next_action = llm_call(grid)
 
         except ValueError:
             print("Invalid input. Using random action.")
