@@ -165,6 +165,7 @@ floor_id = 1
 for episode in range(episodes):
     game.new_episode()
     episode_data = []
+    all_labels = {}
     while not game.is_episode_finished():
         state = game.get_state()
 
@@ -178,6 +179,8 @@ for episode in range(episodes):
             action_index = pressed_key#int(key_mappings[pressed_key])
             if action_index == 7:
                 # End game
+                print(all_labels)
+                exit()
                 break
             action = action_mappings.get(action_index, [False, False, False])
 
@@ -187,6 +190,8 @@ for episode in range(episodes):
             floor_buffer[state.labels_buffer == floor_id] = 1
 
             print(state.labels)
+            for label in state.labels:
+                all_labels[label.object_name] = 0
             grid = convert_labels_to_representation(state.labels, wall_buffer, floor_buffer, screen_height=320, screen_width=240)
             print(grid)
             example = {}
@@ -217,5 +222,6 @@ for episode in range(episodes):
 
         fp = open(f'./training_data/episode_{episode}.json', 'w')
         json.dump(episode_data, fp, indent=4)
+        fp.close()
 
 game.close()
