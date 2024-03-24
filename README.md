@@ -8,3 +8,5 @@ path to training data : 'ViZDoom/training_data'
 E - Enemy
 P - Player
 B - Bullet
+W - Wall
+F - Floor
