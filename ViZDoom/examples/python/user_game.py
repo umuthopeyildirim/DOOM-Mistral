@@ -9,7 +9,7 @@ import json
 
 game = DoomGame()
 #game.load_config("basic.cfg")
-game.load_config(os.path.join('/Users/bhav/experiments/mistral-hackathon/repos/GameCopilot/ViZDoom/scenarios', "basic.cfg"))
+game.load_config(os.path.join('/Users/hope/Desktop/Projects/GameCopilot/ViZDoom/scenarios', "basic.cfg"))
 game.set_window_visible(True)
 game.set_mode(Mode.ASYNC_PLAYER)
 game.set_labels_buffer_enabled(True)

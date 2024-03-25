@@ -1,0 +1,20 @@
+# The ID of the dataset you created above.
+dataset: doom-mixtral
+
+text_completion:
+  # How the fields of the JSON dataset should be formatted into the input text.
+  input_template: "{Instruction} {Input}"
+
+  # How the fields of the JSON dataset should be formatted into the output text.
+  output_template: "{Output}"
+
+# The Hugging Face model name of the base model.
+base_model: mistralai/Mistral-7B-v0.1
+
+epochs: 2.0
+
+wandb_entity: hopesweaty
+wandb_api_key: "your-api"
+wandb_project: doom-mistral
+
+model_id: doom-mistral
