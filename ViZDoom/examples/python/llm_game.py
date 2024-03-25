@@ -6,15 +6,15 @@ from pynput import keyboard
 import time
 import numpy as np
 import json
-from dotenv import load_dotenv
-load_dotenv()
+#from dotenv import load_dotenv
+#load_dotenv()
 from fireworks.client import Fireworks
 client = Fireworks(api_key=os.getenv("FIREWORKS_API_KEY"))
 
 game = DoomGame()
 # game.load_config("basic.cfg")
 game.load_config(os.path.join(
-    '/Users/hope/Desktop/Projects/GameCopilot/ViZDoom/scenarios', "basic.cfg"))
+    '/Users/bhav/experiments/mistral-hackathon/repos/GameCopilot/ViZDoom/scenarios', "basic.cfg"))
 game.set_window_visible(True)
 game.set_mode(Mode.ASYNC_PLAYER)
 game.set_labels_buffer_enabled(True)
@@ -141,7 +141,7 @@ key_mappings = {
     'a': 4,
     'd': 5,
     keyboard.Key.space: 6,
-    keyboard.Key.esc: 7,
+#    keyboard.Key.esc: 7,
 }
 
 action_mappings = {
@@ -199,14 +199,14 @@ screen_width = 240
 wall_id = 0
 floor_id = 1
 
-use_button_index = game.get_available_buttons().index(Button.USE)
-door_actions = [0] * game.get_available_buttons_size()
+#use_button_index = game.get_available_buttons().index(Button.USE)
+#door_actions = [0] * game.get_available_buttons_size()
 
 for episode in range(episodes):
     game.new_episode()
     episode_data = []
     all_labels = {}
-    next_action = None
+    next_action = action_mappings[0]
     while not game.is_episode_finished():
         state = game.get_state()
 
@@ -222,7 +222,8 @@ for episode in range(episodes):
             #    # End game
             #    break
             if next_action is None:
-                action = action_mappings[0]
+                #action = action_mappings[0]
+                continue
             else:
                 action = next_action
             # action = action_mappings.get(action_index, [False, False, False])
@@ -231,7 +232,7 @@ for episode in range(episodes):
             floor_buffer = np.zeros_like(state.labels_buffer)
             wall_buffer[state.labels_buffer == wall_id] = 1
             floor_buffer[state.labels_buffer == floor_id] = 1
-            door_actions[use_button_index] = 1
+            #door_actions[use_button_index] = 1
 
             #print(state.labels)
             for label in state.labels:
@@ -251,13 +252,13 @@ for episode in range(episodes):
             example['health'] = state.game_variables[1]
             example['armor'] = state.game_variables[2]
             example['ammo2'] = state.game_variables[3]
-            next_action = llm_call(episode_data[-1])
             reward = game.make_action(next_action)
             # game.make_action(door_actions)
             example['reward'] = reward
             episode_data.append(example)
             # TODO: Make api call to LLM.
             # next_action = llm_call(grid)
+            next_action = llm_call(episode_data[-1])
 
         except ValueError:
             print("Invalid input. Using random action.")
