@@ -173,12 +173,12 @@ def llm_call(last_state):
         }],
     )
     print(grid)
-    print('Sending response')
+    print('Sending query to DOOM-Mistral-7B')
     action = response.choices[0].message.content
     print('LLM Action: ', action)
     action_idx = available_actions.index(action)
     #print('LLM Action idx: ', action_idx)
-    print(action_idx)
+    #print(action_idx)
     if action_idx == -1:
         return None
     return one_hot(action_idx)
@@ -246,7 +246,8 @@ for episode in range(episodes):
             print("Invalid input. Using random action.")
             #action = choice([0, 1, 2, 3])
 
-        print(f"State: {state.number}, Action: {action}, Reward: {reward}")
+        print(f"State: {state.number}")
+        #print(f"State: {state.number}, Action: {action}")#, Reward: {reward}")
 
         # Capture and save the frame
         #frame = resolution_manager.grab_screen()
