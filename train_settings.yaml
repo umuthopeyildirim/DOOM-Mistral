@@ -10,7 +10,7 @@ learning_rate: 1.0e-4
 epochs: 2.0
 
 wandb_entity: anubhavashok93
-wandb_api_key: 7bbded2881739279cc9219ad20d1647161f2ab17
+wandb_api_key: 'your_api_key'
 wandb_project: doom-mistral
 
 model_id: doom-mistral-fixed-prompt-lr-assistant-fast-3
