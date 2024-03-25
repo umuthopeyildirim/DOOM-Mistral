@@ -1,0 +1,16 @@
+# The ID of the dataset you created above.
+dataset: doom-mistral-4
+
+conversation: {}
+
+# The Hugging Face model name of the base model.
+base_model: mistralai/Mistral-7B-v0.1
+
+learning_rate: 1.0e-4
+epochs: 2.0
+
+wandb_entity: anubhavashok93
+wandb_api_key: 7bbded2881739279cc9219ad20d1647161f2ab17
+wandb_project: doom-mistral
+
+model_id: doom-mistral-fixed-prompt-lr-assistant-fast-3
