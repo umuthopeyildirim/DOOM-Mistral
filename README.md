@@ -14,6 +14,8 @@ Watch the model in action here:
 
 https://twitter.com/i/status/1772166935410532709
 
+You can find our Weights & Biases dashboard [here](https://wandb.ai/hopesweaty/doom-mistral).
+
 ## Setting Up DOOM Mistral
 
 To initialize, create a virtual environment and install the ViZDoom dependencies:
