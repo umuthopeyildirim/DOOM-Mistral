@@ -2,3 +2,6 @@
 .env.local
 .env.production
 .env.staging
+/bin/*
+/build/*
+/dist/*

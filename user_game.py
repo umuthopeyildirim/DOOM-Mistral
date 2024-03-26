@@ -1,4 +1,4 @@
-from vizdoom import DoomGame, Mode, Button
+from vizdoom import DoomGame, Mode
 # from vizdoom.opencv import ScreenResolutionManager
 # import cv2
 import os
@@ -6,15 +6,10 @@ from pynput import keyboard
 import time
 import numpy as np
 import json
-#from dotenv import load_dotenv
-#load_dotenv()
-from fireworks.client import Fireworks
-client = Fireworks(api_key=os.getenv("FIREWORKS_API_KEY"))
 
 game = DoomGame()
-# game.load_config("basic.cfg")
-game.load_config(os.path.join(
-    '/Users/bhav/experiments/mistral-hackathon/repos/GameCopilot/ViZDoom/scenarios', "basic.cfg"))
+game.load_config("basic.cfg")
+# game.load_config(os.path.join('/Users/hope/Desktop/Projects/GameCopilot/ViZDoom/scenarios', "basic.cfg"))
 game.set_window_visible(True)
 game.set_mode(Mode.ASYNC_PLAYER)
 game.set_labels_buffer_enabled(True)
@@ -83,12 +78,12 @@ def generate_ascii_grid(bounding_boxes, wall_buffer, floor_buffer, screen_width,
 
 
 def get_object_name_char(object_name):
-    # If the object is the DoomPlayer, return 'P'
+    if object_name == 'Cacodemon':
+        return 'E'
     if object_name == 'DoomPlayer':
         return 'P'
-    # Otherwise, assume it's an enemy and return 'E'
     else:
-        return 'E'
+        return object_name[0]
 
 
 def convert_labels_to_representation(labels, wall_buffer, floor_buffer, screen_height=320, screen_width=240):
@@ -141,7 +136,7 @@ key_mappings = {
     'a': 4,
     'd': 5,
     keyboard.Key.space: 6,
-#    keyboard.Key.esc: 7,
+    keyboard.Key.esc: 7,
 }
 
 action_mappings = {
@@ -157,41 +152,20 @@ action_mappings = {
 
 pressed_keys = set()
 
-# def on_press(key):
-#    if key in key_mappings:
-#        pressed_keys.add(key_mappings[key])
 
-# def on_release(key):
-#    if key in key_mappings:
-#        pressed_keys.discard(key_mappings[key])
-
-# listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-# listener.start()
+def on_press(key):
+    if key in key_mappings:
+        pressed_keys.add(key_mappings[key])
 
 
-def llm_call(last_state):
-    grid = last_state['grid']
-    prompt = '''Youre the DOOM AI, assuming the role of Demon Slayer in a grid environment represented by ASCII characters. Understand each character as follows: E: Enemy, P: Player, B: Bullet, W: Wall, F: Floor, A: Armor Bonus, Z: Zombieman, H: Health Bonus, S: Stimpack. Your task is to interpret the grid and choose an appropriate action from the following options: MOVE_FORWARD, TURN_LEFT, TURN_RIGHT, MOVE_BACKWARD, MOVE_LEFT, MOVE_RIGHT, ATTACK.  Your responses must exclusively be your chosen action.'''
-    prompt += grid
-    prompt += '\nResponse:'
-    response = client.chat.completions.create(
-    #model="accounts/socter-af4bea/models/doom-mistral-fixed-prompt-lr-assistant",
-    model="accounts/socter-af4bea/models/doom-mistral-fixed-prompt-lr-assistant-fast-3",
-    messages=[{
-        "role": "user",
-        "content": prompt,
-        }],
-    )
-    print(grid)
-    print('Sending query to DOOM-Mistral-7B')
-    action = response.choices[0].message.content
-    print('LLM Action: ', action)
-    action_idx = available_actions.index(action)
-    #print('LLM Action idx: ', action_idx)
-    #print(action_idx)
-    if action_idx == -1:
-        return None
-    return one_hot(action_idx)
+def on_release(key):
+    if key in key_mappings:
+        pressed_keys.discard(key_mappings[key])
+
+
+listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+listener.start()
+
 
 episodes = 10
 screen_height = 320
@@ -199,42 +173,32 @@ screen_width = 240
 wall_id = 0
 floor_id = 1
 
-#use_button_index = game.get_available_buttons().index(Button.USE)
-#door_actions = [0] * game.get_available_buttons_size()
-
 for episode in range(episodes):
     game.new_episode()
     episode_data = []
     all_labels = {}
-    next_action = action_mappings[0]
     while not game.is_episode_finished():
         state = game.get_state()
 
         # Get user input for action
         # action_input = input("Enter action (0-3): ")
-        # if len(pressed_keys) == 0:
-        #    continue
-        # pressed_key = list(pressed_keys)[0]
-        # print('Pressed key: ', pressed_key)
+        if len(pressed_keys) == 0:
+            continue
+        pressed_key = list(pressed_keys)[0]
+        print('Pressed key: ', pressed_key)
         try:
-            # action_index = pressed_key#int(key_mappings[pressed_key])
-            # if action_index == 7:
-            #    # End game
-            #    break
-            if next_action is None:
-                #action = action_mappings[0]
-                continue
-            else:
-                action = next_action
-            # action = action_mappings.get(action_index, [False, False, False])
+            action_index = pressed_key  # int(key_mappings[pressed_key])
+            if action_index == 7:
+                # End game
+                break
+            action = action_mappings.get(action_index, [False, False, False])
 
             wall_buffer = np.zeros_like(state.labels_buffer)
             floor_buffer = np.zeros_like(state.labels_buffer)
             wall_buffer[state.labels_buffer == wall_id] = 1
             floor_buffer[state.labels_buffer == floor_id] = 1
-            #door_actions[use_button_index] = 1
 
-            #print(state.labels)
+            print(state.labels)
             for label in state.labels:
                 all_labels[label.object_name] = 0
             grid = convert_labels_to_representation(
@@ -252,20 +216,15 @@ for episode in range(episodes):
             example['health'] = state.game_variables[1]
             example['armor'] = state.game_variables[2]
             example['ammo2'] = state.game_variables[3]
-            reward = game.make_action(next_action)
-            # game.make_action(door_actions)
+            reward = game.make_action(action)
             example['reward'] = reward
             episode_data.append(example)
-            # TODO: Make api call to LLM.
-            # next_action = llm_call(grid)
-            next_action = llm_call(episode_data[-1])
 
         except ValueError:
             print("Invalid input. Using random action.")
             # action = choice([0, 1, 2, 3])
 
-        print(f"State: {state.number}")
-        #print(f"State: {state.number}, Action: {action}")#, Reward: {reward}")
+        print(f"State: {state.number}, Action: {action}, Reward: {reward}")
 
         # Capture and save the frame
         # frame = resolution_manager.grab_screen()
