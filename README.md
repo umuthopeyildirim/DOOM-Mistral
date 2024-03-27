@@ -70,9 +70,9 @@ To play the game with any LLM, modify `model_id` in line 16, then run:
 - H: HealthBonus
 - S: Stimpack
 
-## Star History Chart
+## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=umuthopeyildirim/GameCopilot&type=Date)](https://star-history.com/#umuthopeyildirim/GameCopilot&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=umuthopeyildirim/DOOM-Mistral&type=Date)](https://star-history.com/#umuthopeyildirim/DOOM-Mistral&Date)
 
 ## Licensing
 
