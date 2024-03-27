@@ -1,7 +1,11 @@
 # DOOM Mistral
 <p align="center">
-<img src = https://github.com/umuthopeyildirim/DOOM-Mistral/assets/90144938/0259a48f-c51d-4223-9ffe-f626dfcb2c73) width="18%" height="9%" >
+<img src = https://github.com/umuthopeyildirim/DOOM-Mistral/assets/90144938/0259a48f-c51d-4223-9ffe-f626dfcb2c73) width="18%" height="9%">
 </p>
+<p align="center">
+<img src = https://github.com/umuthopeyildirim/DOOM-Mistral/assets/90144938/e82098e9-2401-48d9-b99d-1e78f2cc8ba7)>
+</p>
+
 
 This repository is home to the DOOM Mistral project, crafted during the CV [Mistral AI Hackathon](https://cerebralvalley.notion.site/Mistral-AI-Hackathon-Event-Details-Hackers-ee95c2545eda4ce1ae82bd5910a4a3ae) in San Francisco, on March 23-24 2024. Our team (Bhav, Umut, and Paul) developed a deep learning model capable of playing DOOM through visual input alone, utilizing the [ViZDoom](https://vizdoom.farama.org/#) engine, a prominent tool in visual reinforcement learning. We transformed each game frame into a 32x64 grid, representing game elements in each cell, enabling our model to interpret the game visually. For a glimpse into how the model views the game, refer to this video (note: contains strobing effects):
 
