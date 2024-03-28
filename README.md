@@ -7,13 +7,13 @@
 </p>
 
 
-This repository is home to the DOOM Mistral project, crafted during the CV [Mistral AI Hackathon](https://cerebralvalley.notion.site/Mistral-AI-Hackathon-Event-Details-Hackers-ee95c2545eda4ce1ae82bd5910a4a3ae) in San Francisco, on March 23-24 2024. Our team (Bhav, Umut, and Paul) developed a deep learning model capable of playing DOOM through visual input alone, utilizing the [ViZDoom](https://vizdoom.farama.org/#) engine, a prominent tool in visual reinforcement learning. We transformed each game frame into a 32x64 grid, representing game elements in each cell, enabling our model to interpret the game visually. For a glimpse into how the model views the game, refer to this video (note: contains strobing effects):
+This repository is home to the DOOM Mistral project, crafted during the CV [Mistral AI Hackathon](https://cerebralvalley.notion.site/Mistral-AI-Hackathon-Event-Details-Hackers-ee95c2545eda4ce1ae82bd5910a4a3ae) in San Francisco, on March 23-24 2024. Our team (Bhav, Umut, and Paul) developed a deep learning model capable of playing DOOM through visual input alone, utilizing the [ViZDoom](https://vizdoom.farama.org/#) engine, a prominent tool in visual reinforcement learning. We transformed each game frame into a 32x64 grid, representing game elements in each cell, enabling the LLM to interpret the game via ASCII text. For a glimpse into how the model views the game, refer to this video (note: contains strobing effects):
 
 https://twitter.com/i/status/1772075251297550457
 
 We generated training data by playing DOOM, then fine-tuned a LoRA model on `Mistral-7B`, achieving reasonable results. While not an expert, the model can navigate the map and engage enemies when they appear.
 
-Post-training, the model's actions were integrated back into the game, adopting a simplified RL approach due to the hackathon's time constraints.
+During the inference-loop, the model takes in a prompt and a grid representing the current game screen and produces actions which are then asyncronously fed as input into the game.
 
 ![DOOM Mistral Visualization](./docs/arch.jpeg)
 
@@ -21,7 +21,7 @@ Watch the model in action here:
 
 https://twitter.com/i/status/1772166935410532709
 
-You can find our Weights & Biases dashboard [here](https://wandb.ai/hopesweaty/doom-mistral).
+You can find our Weights & Biases dashboard [here](https://wandb.ai/anubhavashok93/doom-mistral).
 
 ## Setting Up DOOM Mistral
 
