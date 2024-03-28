@@ -13,7 +13,7 @@ client = openai.OpenAI(
 )
 
 # Change this to your model id if you want to use your own model
-model_id = "accounts/umut475-2d9d48/models/doom-mistral"
+model_id = "accounts/socter-af4bea/models/doom-mistral-fixed-prompt-lr-assistant-fast-3"
 
 game = DoomGame()
 game.load_config("scenarios/basic.cfg")
