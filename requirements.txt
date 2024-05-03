@@ -19,5 +19,5 @@ stable_baselines3==2.2.1
 tensorflow==2.16.1
 theano==1.0.5
 torch==2.2.1
-tqdm==4.66.2
+tqdm==4.66.3
 wheel==0.43.0
