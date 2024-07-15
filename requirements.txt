@@ -13,11 +13,11 @@ pynput==1.7.6
 pypandoc==1.13
 python-dotenv==1.0.1
 scipy==1.12.0
-setuptools==68.2.2
+setuptools==70.0.0
 skimage==0.0
 stable_baselines3==2.2.1
 tensorflow==2.16.1
 theano==1.0.5
 torch==2.2.1
-tqdm==4.66.2
+tqdm==4.66.3
 wheel==0.43.0
